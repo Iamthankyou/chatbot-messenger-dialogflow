@@ -206,6 +206,34 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
     switch (action) {
         default:
             //unhandled action, just send back the text
+            case "applyed_product":
+            let filteredContexts = contexts.filter(function (el) {
+                return el.name.includes('buy-product-show') ||
+                    el.name.includes('buy_product_apply_dialog_context')
+            });
+            if (filteredContexts.length > 0 && contexts[0].parameters) {
+                let phone_number = (isDefined(contexts[0].parameters.fields['phone'])
+                    && contexts[0].parameters.fields['phone'] != '') ? contexts[0].parameters.fields['phone'].stringValue : '';
+                let user_name = (isDefined(contexts[0].parameters.fields['name'])
+                    && contexts[0].parameters.fields['name'] != '') ? contexts[0].parameters.fields['name'].stringValue : '';
+                let address = (isDefined(contexts[0].parameters.fields['address'])
+                    && contexts[0].parameters.fields['address'] != '') ? contexts[0].parameters.fields['address'].stringValue : '';
+                if (phone_number != '' && user_name != '' && address != '') {
+                    let emailContent = 'A new job enquiery from ' + user_name + ' for the job: ' + job_vacancy +
+                        '.<br> Previous job position: ' + previous_job + '.' +
+                        '.<br> Years of experience: ' + years_of_experience + '.' +
+                        '.<br> Phone number: ' + phone_number + '.';
+
+                    // sendEmail('New job application', emailContent);
+                    console.log(emailContent);
+                    handleMessages(messages, sender);
+
+                } else {
+                    handleMessages(messages, sender);
+                }
+            }
+            break;
+
             handleMessages(messages, sender);
     }
 }
