@@ -219,9 +219,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 let address = (isDefined(contexts[0].parameters.fields['address'])
                     && contexts[0].parameters.fields['address'] != '') ? contexts[0].parameters.fields['address'].stringValue : '';
                 if (phone_number != '' && user_name != '' && address != '') {
-                    let emailContent = 'A new job enquiery from ' + user_name + ' for the job: ' + job_vacancy +
-                        '.<br> Previous job position: ' + previous_job + '.' +
-                        '.<br> Years of experience: ' + years_of_experience + '.' +
+                    let emailContent = 'Fullname: ' + user_name + ' address: ' + address +
                         '.<br> Phone number: ' + phone_number + '.';
 
                     // sendEmail('New job application', emailContent);
