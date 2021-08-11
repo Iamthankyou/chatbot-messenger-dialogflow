@@ -274,6 +274,33 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             }
             break;
 
+            case "get-current-weather":
+                if ( parameters.fields.hasOwnProperty('city') && parameters.fields['city'].stringValue!='') {
+                    request({
+                        url: 'http://api.openweathermap.org/data/2.5/weather', //URL to hit
+                        qs: {
+                            appid: config.WEATHER_API_KEY,
+                            q: parameters.fields['city'].stringValue
+                        }, //Query string data
+                    }, function(error, response, body){
+                        if( response.statusCode === 200) {
+    
+                            let weather = JSON.parse(body);
+                            if (weather.hasOwnProperty("weather")) {
+                                let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]}`;
+                                sendTextMessage(sender, reply);
+                            } else {
+                                sendTextMessage(sender,
+                                    `Thời tiết ${parameters.fields['city'].stringValue}`);
+                            }
+                        } else {
+                            sendTextMessage(sender, 'Không thể tìm kiếm thành phố này');
+                        }
+                    });
+                } else {
+                    handleMessages(messages, sender);
+                }
+                break;
         default:
             //unhandled action, just send back the text
             handleMessages(messages, sender);
