@@ -281,7 +281,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                         url: 'http://api.openweathermap.org/data/2.5/weather', //URL to hit
                         qs: {
                             appid: config.WEATHER_API_KEY,
-                            q: parameters.fields['city'].stringValue,
+                            q: parameters.fields['city-name'].stringValue,
                             lang:"vi"
                         }, //Query string data
                     }, function(error, response, body){
