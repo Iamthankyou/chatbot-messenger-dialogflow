@@ -243,14 +243,31 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     && contexts[0].parameters.fields['name'] != '') ? contexts[0].parameters.fields['name'].stringValue : '';
                 let address = (isDefined(contexts[0].parameters.fields['address'])
                     && contexts[0].parameters.fields['address'] != '') ? contexts[0].parameters.fields['address'].stringValue : '';
-                if (phone_number != '' && user_name != '' && address != '') {
-                    let emailContent = 'Fullname: ' + user_name + ' address: ' + address +
-                        '.<br> Phone number: ' + phone_number + '.';
+                let bill = (isDefined(contexts[0].parameters.fields['bill'])
+                    && contexts[0].parameters.fields['bill'] != '') ? contexts[0].parameters.fields['bill'].stringValue : '';
 
+                if (phone_number != '' && user_name != '' && address != '' && bill=='') {
+                    let replies = [
+                        {
+                            "content_type":"text",
+                            "title":"COD",
+                            "payload":"COD"
+                        },
+                        {
+                            "content_type":"text",
+                            "title":"Ví điện tử",
+                            "payload":"Vi dien tu"
+                        }
+                    ];
+                    sendQuickReply(sender, messages[0].text.text[0], replies);
+
+
+                }else if (phone_number != '' && user_name != '' && address != '' && bill!=''){
+                    let emailContent = 'Fullname: ' + user_name + ' address: ' + address +
+                        '.<br> Phone number: ' + phone_number +  '.<br> Bill: ' + bill + '.' ;
                     // sendEmail('New job application', emailContent);
                     console.log(emailContent);
                     handleMessages(messages, sender);
-
                 } else {
                     handleMessages(messages, sender);
                 }
@@ -258,7 +275,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             break;
 
         default:
-        //unhandled action, just send back the text
+            //unhandled action, just send back the text
             handleMessages(messages, sender);
 
     }
@@ -751,33 +768,33 @@ function callSendAPI(messageData) {
 }
 
 function greetUserText(userId) {
-	//first read user firstname
-	request({
-		uri: 'https://graph.facebook.com/v3.2/' + userId,
-		qs: {
-			access_token: config.FB_PAGE_TOKEN
-		}
+    //first read user firstname
+    request({
+        uri: 'https://graph.facebook.com/v3.2/' + userId,
+        qs: {
+            access_token: config.FB_PAGE_TOKEN
+        }
 
-	}, function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+    }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
 
-			var user = JSON.parse(body);
-			console.log('getUserData: ' + user);
-			if (user.first_name) {
-				console.log("FB user: %s %s, %s",
-					user.first_name, user.last_name, user.profile_pic);
+            var user = JSON.parse(body);
+            console.log('getUserData: ' + user);
+            if (user.first_name) {
+                console.log("FB user: %s %s, %s",
+                    user.first_name, user.last_name, user.profile_pic);
 
-				sendTextMessage(userId, "Chào " + user.first_name + '! ' +
+                sendTextMessage(userId, "Chào " + user.first_name + '! ' +
                     'Shop có thể tư vấn bạn về điều gì ? ');
-			} else {
-				console.log("Cannot get data for fb user with id",
-					userId);
-			}
-		} else {
-			console.error(response.error);
-		}
+            } else {
+                console.log("Cannot get data for fb user with id",
+                    userId);
+            }
+        } else {
+            console.error(response.error);
+        }
 
-	});
+    });
 }
 
 
