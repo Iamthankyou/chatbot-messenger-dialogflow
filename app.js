@@ -10,7 +10,7 @@ const app = express();
 const uuid = require('uuid');
 const pg = require('pg');
 pg.defaults.ssl = true;
-pg.defaults.auth
+
 
 
 // Messenger API parameters
@@ -834,14 +834,14 @@ function greetUserText(userId) {
                     console.log('Why ??');
 
                     var rows = [];
-                    client.query(`SELECT fb_id FROM user WHERE fb_id='${userId}' LIMIT 1`,
+                    client.query(`SELECT fb_id FROM public."user" WHERE fb_id='${userId}' LIMIT 1`,
                         function (err, result) {
                             if (err) {
                                 console.log('Query error: ' + err);
                             } else {
                                 if (result.rows.length === 0) {
 
-                                    let sql = 'INSERT INTO user (fb_id, first_name, last_name, profile_pic) ' +
+                                    let sql = 'INSERT INTO public."user" (fb_id, first_name, last_name, profile_pic) ' +
                                         'VALUES ($1, $2, $3, $4)';
                                     client.query(sql,
                                         [
