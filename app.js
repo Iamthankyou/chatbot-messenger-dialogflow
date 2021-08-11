@@ -9,7 +9,7 @@ const request = require('request');
 const app = express();
 const uuid = require('uuid');
 const pg = require('pg');
-pg.defaults.ssl = true;
+pg.defaults.ssl = false;
 
 
 // Messenger API parameters
