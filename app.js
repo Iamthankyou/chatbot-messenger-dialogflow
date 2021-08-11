@@ -276,6 +276,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
             case "get-current-weather":
                 if ( parameters.fields.hasOwnProperty('city-name') && parameters.fields['city-name'].stringValue!='') {
+                    console.log('???????? ' + parameters.fields['city-name'].stringValue!='');
                     request({
                         url: 'http://api.openweathermap.org/data/2.5/weather', //URL to hit
                         qs: {
@@ -285,7 +286,6 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                         }, //Query string data
                     }, function(error, response, body){
                         if( response.statusCode === 200) {
-    
                             let weather = JSON.parse(body);
                             if (weather.hasOwnProperty("weather")) {
                                 let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]}`;
