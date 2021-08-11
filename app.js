@@ -838,7 +838,7 @@ function greetUserText(userId) {
     
                                     if (result.rows.length === 0) {
                                         
-                                        console.log(result.rows.length);
+                                        console.log('??????'+result.rows.length);
 
                                         let sql = 'INSERT INTO users (fb_id, first_name, last_name, profile_pic) ' +
                                             'VALUES ($1, $2, $3, $4)';
@@ -851,7 +851,7 @@ function greetUserText(userId) {
                                             ]);
                                     }
                                     else{
-                                        console.log(result.rows.length);
+                                        console.log('?'+result.rows.length);
                                     }
                                 }
                             });
