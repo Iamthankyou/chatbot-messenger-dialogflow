@@ -850,6 +850,9 @@ function greetUserText(userId) {
                                                 user.profile_pic
                                             ]);
                                     }
+                                    else{
+                                        console.log(result.rows.length);
+                                    }
                                 }
                             });
     
