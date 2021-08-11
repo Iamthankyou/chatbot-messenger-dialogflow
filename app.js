@@ -57,10 +57,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-
-
-
-
 const credentials = {
     client_email: config.GOOGLE_CLIENT_EMAIL,
     private_key: config.GOOGLE_PRIVATE_KEY,
@@ -206,6 +202,37 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
     switch (action) {
         default:
             //unhandled action, just send back the text
+            case "faq-delivery":
+
+            handleMessages(messages, sender);
+
+            sendTypingOn(sender);
+
+            //ask what user wants to do next
+            setTimeout(function() {
+                let buttons = [
+                    {
+                        type:"web_url",
+                        url:"https://i.ghtk.vn/",
+                        title:"Theo dõi quá trình giao hàng"
+                    },
+                    {
+                        type:"phone_number",
+                        title:"Gọi cho shop",
+                        payload:"+84392301017",
+                    },
+                    {
+                        type:"postback",
+                        title:"Tiếp tục nhắn tin",
+                        payload:"CHAT"
+                    }
+                ];
+
+                sendButtonMessage(sender, "Bạn muốn làm điều gì tiếp theo ?", buttons);
+            }, 3000) 
+
+            break;
+
             case "applyed_product":
             let filteredContexts = contexts.filter(function (el) {
                 return el.name.includes('buy-product-show') ||
@@ -741,6 +768,11 @@ function receivedPostback(event) {
     var payload = event.postback.payload;
 
     switch (payload) {
+        case 'CHAT':
+            //user wants to chat
+            sendTextMessage(senderID, "Bạn muốn shop tư vấn về điều gì?");
+            break;
+
         default:
             //unindentified payload
             sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
