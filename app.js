@@ -257,9 +257,9 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             }
             break;
 
-            handleMessages(messages, sender);
         default:
         //unhandled action, just send back the text
+            handleMessages(messages, sender);
 
     }
 }
