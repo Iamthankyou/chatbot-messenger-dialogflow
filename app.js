@@ -10,6 +10,7 @@ const app = express();
 const uuid = require('uuid');
 const pg = require('pg');
 pg.defaults.ssl = true;
+const userService = require('./user');
 
 
 
@@ -80,6 +81,7 @@ const sessionClient = new dialogflow.SessionsClient(
 
 
 const sessionIds = new Map();
+const usersMap = new Map();
 
 // Index route
 app.get('/', function (req, res) {
@@ -144,9 +146,17 @@ app.post('/webhook/', function (req, res) {
     }
 });
 
+function setSessionAndUser(senderID) {
+    if (!sessionIds.has(senderID)) {
+        sessionIds.set(senderID, uuid.v1());
+    }
 
-
-
+    if (!usersMap.has(senderID)) {
+        userService.addUser(function(user){
+            usersMap.set(senderID, user);
+        }, senderID);
+    }
+}
 
 function receivedMessage(event) {
 
@@ -155,9 +165,7 @@ function receivedMessage(event) {
     var timeOfMessage = event.timestamp;
     var message = event.message;
 
-    if (!sessionIds.has(senderID)) {
-        sessionIds.set(senderID, uuid.v1());
-    }
+    setSessionAndUser(senderID);
     //console.log("Received message for user %d and page %d at %d with message:", senderID, recipientID, timeOfMessage);
     //console.log(JSON.stringify(message));
 
@@ -776,6 +784,14 @@ function sendAccountLinking(recipientId) {
     callSendAPI(messageData);
 }
 
+async function resolveAfterXSeconds(x) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(x);
+        }, x * 1000);
+    });
+}
+
 /*
  * Call the Send API. The message data goes in the body. If successful, we'll
  * get the message id in a response
@@ -808,68 +824,19 @@ function callSendAPI(messageData) {
     });
 }
 
-function greetUserText(userId) {
-    //first read user firstname
-    request({
-        uri: 'https://graph.facebook.com/v3.2/' + userId,
-        qs: {
-            access_token: config.FB_PAGE_TOKEN
-        }
-
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-
-            var user = JSON.parse(body);
-            console.log('getUserData: ' + user);
-            if (user.first_name) {
-                console.log("FB user: %s %s, %s",
-                    user.first_name, user.last_name, user.profile_pic);
-                var pool = new pg.Pool(config.PG_CONFIG);
-
-                pool.connect(function (err, client, done) {
-                    if (err) {
-                        return console.error('Error acquiring client', err.stack);
-                    }
-
-                    console.log('Why ??');
-
-                    var rows = [];
-                    client.query(`SELECT fb_id FROM public."user" WHERE fb_id='${userId}' LIMIT 1`,
-                        function (err, result) {
-                            if (err) {
-                                console.log('Query error: ' + err);
-                            } else {
-                                if (result.rows.length === 0) {
-
-                                    let sql = 'INSERT INTO public."user" (fb_id, first_name, last_name, profile_pic) ' +
-                                        'VALUES ($1, $2, $3, $4)';
-                                    client.query(sql,
-                                        [
-                                            userId,
-                                            user.first_name,
-                                            user.last_name,
-                                            user.profile_pic
-                                        ]);
-                                }
-                            }
-                        });
-
-                });
-                pool.end();
-
-                sendTextMessage(userId, "Chào " + user.first_name + '! ' +
-                    'Shop có thể tư vấn bạn về điều gì ? ');
-            } else {
-                console.log("Cannot get data for fb user with id",
-                    userId);
-            }
-        } else {
-            console.error(response.error);
-        }
-
-    });
-}
-
+async function greetUserText(userId) {
+    let user = usersMap.get(userId);
+    if (!user) {
+        await resolveAfterXSeconds(2);
+        user = usersMap.get(userId);
+    }
+    if (user) {
+        sendTextMessage(userId, "Chào " + user.first_name + '! ' +
+            'Shop có thể tư vấn cho bạn điều gì nào ? ');
+    } else {
+        sendTextMessage(userId, 'Chào bạn! ' +
+            'Shop có thể tư vấn cho bạn điều gì nào ?');
+    }
 
 /*
  * Postback Event
@@ -882,6 +849,8 @@ function receivedPostback(event) {
     var senderID = event.sender.id;
     var recipientID = event.recipient.id;
     var timeOfPostback = event.timestamp;
+
+    setSessionAndUser(senderID);
 
     // The 'payload' param is a developer-defined field which is set in a postback
     // button for Structured Messages.
