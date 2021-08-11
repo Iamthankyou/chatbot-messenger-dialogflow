@@ -840,11 +840,7 @@ function greetUserText(userId) {
                             if (err) {
                                 console.log('Query error: ' + err);
                             } else {
-
-                                console.log('What ?');
                                 if (result.rows.length === 0) {
-
-                                    console.log('??????' + result.rows.length);
 
                                     let sql = 'INSERT INTO user (fb_id, first_name, last_name, profile_pic) ' +
                                         'VALUES ($1, $2, $3, $4)';
@@ -855,9 +851,6 @@ function greetUserText(userId) {
                                             user.last_name,
                                             user.profile_pic
                                         ]);
-                                }
-                                else {
-                                    console.log('?' + result.rows.length);
                                 }
                             }
                         });
