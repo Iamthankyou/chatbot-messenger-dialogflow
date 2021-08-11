@@ -10,6 +10,7 @@ const app = express();
 const uuid = require('uuid');
 const pg = require('pg');
 pg.defaults.ssl = true;
+pg.defaults.auth
 
 
 // Messenger API parameters
@@ -823,9 +824,7 @@ function greetUserText(userId) {
             if (user.first_name) {
                 console.log("FB user: %s %s, %s",
                     user.first_name, user.last_name, user.profile_pic);
-                console.log('pool_start');
                 var pool = new pg.Pool(config.PG_CONFIG);
-                console.log('end');
 
                 pool.connect(function (err, client, done) {
                     if (err) {
