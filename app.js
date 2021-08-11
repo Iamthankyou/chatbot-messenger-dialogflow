@@ -275,7 +275,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             break;
 
             case "get-current-weather":
-                if ( parameters.fields.hasOwnProperty('city') && parameters.fields['city'].stringValue!='') {
+                if ( parameters.fields.hasOwnProperty('city-name') && parameters.fields['city-name'].stringValue!='') {
                     request({
                         url: 'http://api.openweathermap.org/data/2.5/weather', //URL to hit
                         qs: {
@@ -290,11 +290,12 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                                 let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]}`;
                                 sendTextMessage(sender, reply);
                             } else {
+                            console.log(parameters.fields['city-name'].stringValue);
                                 sendTextMessage(sender,
-                                    `Thời tiết ${parameters.fields['city'].stringValue}`);
+                                    `Thời tiết ${parameters.fields['city-name'].stringValue}`);
                             }
                         } else {
-                            console.log(parameters.fields['city'].stringValue);
+                            console.log(parameters.fields['city-name'].stringValue);
                             sendTextMessage(sender, 'Không thể tìm kiếm thành phố này');
                         }
                     });
