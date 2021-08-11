@@ -276,7 +276,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
             case "get-current-weather":
                 if ( parameters.fields.hasOwnProperty('city-name') && parameters.fields['city-name'].stringValue!='') {
-                    console.log('???????? ' + parameters.fields['city-name'].stringValue!='');
+                    console.log('???????? ' + parameters.fields['city-name'].stringValue);
                     request({
                         url: 'http://api.openweathermap.org/data/2.5/weather', //URL to hit
                         qs: {
