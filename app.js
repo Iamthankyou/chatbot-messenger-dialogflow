@@ -288,15 +288,17 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                             let weather = JSON.parse(body);
                             if (weather.hasOwnProperty("weather")) {
                                 let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]}`;
+                                console.log('??' + parameters.fields['city-name'].stringValue);
                                 sendTextMessage(sender, reply);
+
                             } else {
                             console.log(parameters.fields['city-name'].stringValue);
                                 sendTextMessage(sender,
-                                    `Thời tiết ${parameters.fields['city-name'].stringValue}`);
+                                    `Không tìm thấy thành phố ${parameters.fields['city-name'].stringValue}`);
                             }
                         } else {
                             console.log(parameters.fields['city-name'].stringValue);
-                            sendTextMessage(sender, 'Không thể tìm kiếm thành phố này');
+                            sendTextMessage(sender, 'Thời tiết không khả dụng');
                         }
                     });
                 } else {
