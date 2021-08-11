@@ -288,7 +288,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                         if( response.statusCode === 200) {
                             let weather = JSON.parse(body);
                             if (weather.hasOwnProperty("weather")) {
-                                let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]}`;
+                                let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]} nhiệt độ là ${Number(weather["main"]["temp"]) - 273.15} `;
                                 console.log('??' + parameters.fields['city-name'].stringValue);
                                 sendTextMessage(sender, reply);
 
