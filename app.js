@@ -829,6 +829,9 @@ function greetUserText(userId) {
                         if (err) {
                             return console.error('Error acquiring client', err.stack);
                         }
+                        
+                        console.log('Why ??');
+
                         var rows = [];
                         client.query(`SELECT fb_id FROM user WHERE fb_id='${userId}' LIMIT 1`,
                             function(err, result) {
