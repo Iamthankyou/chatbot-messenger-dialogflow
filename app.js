@@ -835,8 +835,9 @@ async function greetUserText(userId) {
             'Shop có thể tư vấn cho bạn điều gì nào ? ');
     } else {
         sendTextMessage(userId, 'Chào bạn! ' +
-            'Shop có thể tư vấn cho bạn điều gì nào ?');
+            '');
     }
+}
 
 /*
  * Postback Event
