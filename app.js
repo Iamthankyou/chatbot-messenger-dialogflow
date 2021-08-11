@@ -823,7 +823,7 @@ function greetUserText(userId) {
             if (user.first_name) {
                 console.log("FB user: %s %s, %s",
                     user.first_name, user.last_name, user.profile_pic);
-                
+
                     var pool = new pg.Pool(config.PG_CONFIG);
                     pool.connect(function(err, client, done) {
                         if (err) {
@@ -837,6 +837,9 @@ function greetUserText(userId) {
                                 } else {
     
                                     if (result.rows.length === 0) {
+                                        
+                                        console.log(result.rows.length);
+
                                         let sql = 'INSERT INTO users (fb_id, first_name, last_name, profile_pic) ' +
                                             'VALUES ($1, $2, $3, $4)';
                                         client.query(sql,
