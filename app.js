@@ -180,7 +180,7 @@ function receivedMessage(event) {
 }
 
 
-function handleMessageAttachments(messageAttachments, senderID){
+function handleMessageAttachments(messageAttachments, senderID) {
     //for now just reply
     sendTextMessage(senderID, "Attachment received. Thank you.");
 }
@@ -200,40 +200,38 @@ function handleEcho(messageId, appId, metadata) {
 
 function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
     switch (action) {
-        default:
-            //unhandled action, just send back the text
-            case "faq-delivery":
+        case "faq-delivery":
 
             handleMessages(messages, sender);
 
             sendTypingOn(sender);
 
             //ask what user wants to do next
-            setTimeout(function() {
+            setTimeout(function () {
                 let buttons = [
                     {
-                        type:"web_url",
-                        url:"https://i.ghtk.vn/",
-                        title:"Theo dõi quá trình giao hàng"
+                        type: "web_url",
+                        url: "https://i.ghtk.vn/",
+                        title: "Theo dõi quá trình giao hàng"
                     },
                     {
-                        type:"phone_number",
-                        title:"Gọi cho shop",
-                        payload:"+84392301017",
+                        type: "phone_number",
+                        title: "Gọi cho shop",
+                        payload: "+84392301017",
                     },
                     {
-                        type:"postback",
-                        title:"Tiếp tục nhắn tin",
-                        payload:"CHAT"
+                        type: "postback",
+                        title: "Tiếp tục nhắn tin",
+                        payload: "CHAT"
                     }
                 ];
 
                 sendButtonMessage(sender, "Bạn muốn làm điều gì tiếp theo ?", buttons);
-            }, 3000) 
+            }, 3000)
 
             break;
 
-            case "applyed_product":
+        case "applyed_product":
             let filteredContexts = contexts.filter(function (el) {
                 return el.name.includes('buy-product-show') ||
                     el.name.includes('buy_product_apply_dialog_context')
@@ -260,6 +258,9 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             break;
 
             handleMessages(messages, sender);
+        default:
+        //unhandled action, just send back the text
+
     }
 }
 
@@ -276,11 +277,11 @@ function handleMessage(message, sender) {
             let replies = [];
             message.quickReplies.quickReplies.forEach((text) => {
                 let reply =
-                    {
-                        "content_type": "text",
-                        "title": text,
-                        "payload": text
-                    }
+                {
+                    "content_type": "text",
+                    "title": text,
+                    "payload": text
+                }
                 replies.push(reply);
             });
             sendQuickReply(sender, message.quickReplies.title, replies);
@@ -320,7 +321,7 @@ function handleCardMessages(messages, sender) {
 
         let element = {
             "title": message.card.title,
-            "image_url":message.card.imageUri,
+            "image_url": message.card.imageUri,
             "subtitle": message.card.subtitle,
             "buttons": buttons
         };
@@ -332,25 +333,25 @@ function handleCardMessages(messages, sender) {
 
 function handleMessages(messages, sender) {
     let timeoutInterval = 1100;
-    let previousType ;
+    let previousType;
     let cardTypes = [];
     let timeout = 0;
     for (var i = 0; i < messages.length; i++) {
 
-        if ( previousType == "card" && (messages[i].message != "card" || i == messages.length - 1)) {
+        if (previousType == "card" && (messages[i].message != "card" || i == messages.length - 1)) {
             timeout = (i - 1) * timeoutInterval;
             setTimeout(handleCardMessages.bind(null, cardTypes, sender), timeout);
             cardTypes = [];
             timeout = i * timeoutInterval;
             setTimeout(handleMessage.bind(null, messages[i], sender), timeout);
-        } else if ( messages[i].message == "card" && i == messages.length - 1) {
+        } else if (messages[i].message == "card" && i == messages.length - 1) {
             cardTypes.push(messages[i]);
             timeout = (i - 1) * timeoutInterval;
             setTimeout(handleCardMessages.bind(null, cardTypes, sender), timeout);
             cardTypes = [];
-        } else if ( messages[i].message == "card") {
+        } else if (messages[i].message == "card") {
             cardTypes.push(messages[i]);
-        } else  {
+        } else {
 
             timeout = i * timeoutInterval;
             setTimeout(handleMessage.bind(null, messages[i], sender), timeout);
@@ -591,7 +592,7 @@ function sendGenericMessage(recipientId, elements) {
 
 
 function sendReceiptMessage(recipientId, recipient_name, currency, payment_method,
-                            timestamp, elements, address, summary, adjustments) {
+    timestamp, elements, address, summary, adjustments) {
     // Generate a random receipt ID as the API requires a unique ID
     var receiptId = "order" + Math.floor(Math.random() * 1000);
 
@@ -632,7 +633,7 @@ function sendQuickReply(recipientId, text, replies, metadata) {
         },
         message: {
             text: text,
-            metadata: isDefined(metadata)?metadata:'',
+            metadata: isDefined(metadata) ? metadata : '',
             quick_replies: replies
         }
     };
@@ -772,7 +773,9 @@ function receivedPostback(event) {
             //user wants to chat
             sendTextMessage(senderID, "Bạn muốn shop tư vấn về điều gì?");
             break;
-
+        case 'GET_STARTED':
+            sendTextMessage(senderID, "Bạn muốn shop tư vấn về điều gì?");
+            break;
         default:
             //unindentified payload
             sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
