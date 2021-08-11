@@ -294,6 +294,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                                     `Thời tiết ${parameters.fields['city'].stringValue}`);
                             }
                         } else {
+                            console.log(parameters.fields['city'].stringValue);
                             sendTextMessage(sender, 'Không thể tìm kiếm thành phố này');
                         }
                     });
