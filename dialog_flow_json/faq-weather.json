@@ -1,0 +1,206 @@
+{
+  "id": "0aea868e-86be-433f-b5c0-75d86c0cde76",
+  "name": "faq-weather",
+  "auto": true,
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "conditionalResponses": [],
+  "context": [],
+  "contexts": [],
+  "endInteraction": false,
+  "events": [],
+  "fallbackIntent": false,
+  "liveAgentHandoff": false,
+  "parentId": null,
+  "followUpIntents": [],
+  "priority": 500000,
+  "responses": [
+    {
+      "action": "get-current-weather",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "noInputPromptMessages": [],
+          "noMatchPromptMessages": [],
+          "promptMessages": [],
+          "defaultValue": "",
+          "name": "person",
+          "dataType": "@sys.person",
+          "isList": false,
+          "required": false,
+          "prompts": [],
+          "value": "$person",
+          "outputDialogContexts": []
+        },
+        {
+          "noInputPromptMessages": [],
+          "noMatchPromptMessages": [],
+          "promptMessages": [],
+          "defaultValue": "",
+          "name": "city-name",
+          "dataType": "@city",
+          "isList": false,
+          "required": true,
+          "prompts": [
+            "Vui lòng nhập tên thành phố ?"
+          ],
+          "value": "$city-name",
+          "outputDialogContexts": []
+        }
+      ],
+      "defaultResponsePlatforms": {
+        "facebook": true
+      },
+      "messages": [
+        {
+          "type": "message",
+          "platform": "facebook",
+          "condition": "",
+          "speech": [
+            "Đây là thông tin thời tiết tại $city-name:"
+          ]
+        },
+        {
+          "type": "message",
+          "condition": "",
+          "speech": []
+        }
+      ],
+      "resetContexts": false
+    }
+  ],
+  "rootParentId": null,
+  "templates": [],
+  "userSays": [
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "Thời",
+          "userDefined": false,
+          "alias": "person",
+          "meta": "@sys.person"
+        },
+        {
+          "text": " ",
+          "userDefined": false
+        },
+        {
+          "text": "tiết",
+          "userDefined": false,
+          "alias": "person",
+          "meta": "@sys.person"
+        },
+        {
+          "text": " ",
+          "userDefined": false
+        },
+        {
+          "text": "tại",
+          "userDefined": false,
+          "alias": "person",
+          "meta": "@sys.person"
+        },
+        {
+          "text": " ",
+          "userDefined": false
+        },
+        {
+          "text": "London",
+          "userDefined": false,
+          "alias": "city-name",
+          "meta": "@city"
+        }
+      ],
+      "count": 0,
+      "id": "da1a033c-9a3a-4113-807e-f22461611519",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "Thời",
+          "userDefined": false,
+          "alias": "person",
+          "meta": "@sys.person"
+        },
+        {
+          "text": " ",
+          "userDefined": false
+        },
+        {
+          "text": "tiết",
+          "userDefined": false,
+          "alias": "person",
+          "meta": "@sys.person"
+        },
+        {
+          "text": " tại ",
+          "userDefined": false
+        },
+        {
+          "text": "Ninh Bình",
+          "userDefined": false,
+          "alias": "city-name",
+          "meta": "@city"
+        }
+      ],
+      "count": 0,
+      "id": "51f9d6fb-b3f0-42d7-8aa0-cf7bbd38cfea",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "Thời tiết bây giờ ?",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "991f21aa-d29e-4962-ab56-b1c28e519e79",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "Thời",
+          "userDefined": false,
+          "alias": "person",
+          "meta": "@sys.person"
+        },
+        {
+          "text": " ",
+          "userDefined": false
+        },
+        {
+          "text": "tiết",
+          "userDefined": false,
+          "alias": "person",
+          "meta": "@sys.person"
+        },
+        {
+          "text": " tại ",
+          "userDefined": false
+        },
+        {
+          "text": "Hà Nội",
+          "userDefined": false,
+          "alias": "city-name",
+          "meta": "@city"
+        },
+        {
+          "text": " ?",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "07107ed8-6f5c-4e0a-ad72-4ec39794bd04",
+      "updated": null
+    }
+  ],
+  "webhookForSlotFilling": false,
+  "webhookUsed": false
+}
