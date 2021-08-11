@@ -254,25 +254,25 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 let bill = (isDefined(contexts[0].parameters.fields['bill'])
                     && contexts[0].parameters.fields['bill'] != '') ? contexts[0].parameters.fields['bill'].stringValue : '';
 
-                if (phone_number != '' && user_name != '' && address != '' && bill=='') {
+                if (phone_number != '' && user_name != '' && address != '' && bill == '') {
                     let replies = [
                         {
-                            "content_type":"text",
-                            "title":"COD",
-                            "payload":"COD"
+                            "content_type": "text",
+                            "title": "COD",
+                            "payload": "COD"
                         },
                         {
-                            "content_type":"text",
-                            "title":"Ví điện tử",
-                            "payload":"Vi dien tu"
+                            "content_type": "text",
+                            "title": "Ví điện tử",
+                            "payload": "Vi dien tu"
                         }
                     ];
                     sendQuickReply(sender, messages[0].text.text[0], replies);
 
 
-                }else if (phone_number != '' && user_name != '' && address != '' && bill!=''){
+                } else if (phone_number != '' && user_name != '' && address != '' && bill != '') {
                     let emailContent = 'Fullname: ' + user_name + ' address: ' + address +
-                        '.<br> Phone number: ' + phone_number +  '.<br> Bill: ' + bill + '.' ;
+                        '.<br> Phone number: ' + phone_number + '.<br> Bill: ' + bill + '.';
                     // sendEmail('New job application', emailContent);
                     console.log(emailContent);
                     handleMessages(messages, sender);
@@ -282,38 +282,38 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             }
             break;
 
-            case "get-current-weather":
-                if ( parameters.fields.hasOwnProperty('city-name') && isDefined(parameters.fields['city-name'].stringValue!='') && parameters.fields['city-name'].stringValue!='') {
-                    console.log('???????? ' + parameters.fields['city-name'].stringValue);
-                    request({
-                        url: 'http://api.openweathermap.org/data/2.5/weather', //URL to hit
-                        qs: {
-                            appid: config.WEATHER_API_KEY,
-                            q: parameters.fields['city-name'].stringValue,
-                            lang:"vi"
-                        }, //Query string data
-                    }, function(error, response, body){
-                        if( response.statusCode === 200) {
-                            let weather = JSON.parse(body);
-                            if (weather.hasOwnProperty("weather")) {
-                                let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]} nhiệt độ là ${Number(weather["main"]["temp"]) - 273.15} `;
-                                console.log('??' + parameters.fields['city-name'].stringValue);
-                                sendTextMessage(sender, reply);
+        case "get-current-weather":
+            if (parameters.fields.hasOwnProperty('city-name') && isDefined(parameters.fields['city-name'].stringValue != '') && parameters.fields['city-name'].stringValue != '') {
+                console.log('???????? ' + parameters.fields['city-name'].stringValue);
+                request({
+                    url: 'http://api.openweathermap.org/data/2.5/weather', //URL to hit
+                    qs: {
+                        appid: config.WEATHER_API_KEY,
+                        q: parameters.fields['city-name'].stringValue,
+                        lang: "vi"
+                    }, //Query string data
+                }, function (error, response, body) {
+                    if (response.statusCode === 200) {
+                        let weather = JSON.parse(body);
+                        if (weather.hasOwnProperty("weather")) {
+                            let reply = `${messages[0].text.text} ${weather["weather"][0]["description"]} nhiệt độ là ${Number(weather["main"]["temp"]) - 273.15} `;
+                            console.log('??' + parameters.fields['city-name'].stringValue);
+                            sendTextMessage(sender, reply);
 
-                            } else {
-                            console.log(parameters.fields['city-name'].stringValue);
-                                sendTextMessage(sender,
-                                    `Không tìm thấy thành phố ${parameters.fields['city-name'].stringValue}`);
-                            }
                         } else {
                             console.log(parameters.fields['city-name'].stringValue);
-                            sendTextMessage(sender, 'Thời tiết không khả dụng');
+                            sendTextMessage(sender,
+                                `Không tìm thấy thành phố ${parameters.fields['city-name'].stringValue}`);
                         }
-                    });
-                } else {
-                    handleMessages(messages, sender);
-                }
-                break;
+                    } else {
+                        console.log(parameters.fields['city-name'].stringValue);
+                        sendTextMessage(sender, 'Thời tiết không khả dụng');
+                    }
+                });
+            } else {
+                handleMessages(messages, sender);
+            }
+            break;
         default:
             //unhandled action, just send back the text
             handleMessages(messages, sender);
@@ -823,45 +823,47 @@ function greetUserText(userId) {
             if (user.first_name) {
                 console.log("FB user: %s %s, %s",
                     user.first_name, user.last_name, user.profile_pic);
+                console.log('pool_start');
+                var pool = new pg.Pool(config.PG_CONFIG);
+                console.log('end');
 
-                    var pool = new pg.Pool(config.PG_CONFIG);
-                    pool.connect(function(err, client, done) {
-                        if (err) {
-                            return console.error('Error acquiring client', err.stack);
-                        }
-                        
-                        console.log('Why ??');
+                pool.connect(function (err, client, done) {
+                    if (err) {
+                        return console.error('Error acquiring client', err.stack);
+                    }
 
-                        var rows = [];
-                        client.query(`SELECT fb_id FROM user WHERE fb_id='${userId}' LIMIT 1`,
-                            function(err, result) {
-                                if (err) {
-                                    console.log('Query error: ' + err);
-                                } else {
-    
-                                    console.log('What ?');
-                                    if (result.rows.length === 0) {
-                                        
-                                        console.log('??????'+result.rows.length);
+                    console.log('Why ??');
 
-                                        let sql = 'INSERT INTO user (fb_id, first_name, last_name, profile_pic) ' +
-                                            'VALUES ($1, $2, $3, $4)';
-                                        client.query(sql,
-                                            [
-                                                userId,
-                                                user.first_name,
-                                                user.last_name,
-                                                user.profile_pic
-                                            ]);
-                                    }
-                                    else{
-                                        console.log('?'+result.rows.length);
-                                    }
+                    var rows = [];
+                    client.query(`SELECT fb_id FROM user WHERE fb_id='${userId}' LIMIT 1`,
+                        function (err, result) {
+                            if (err) {
+                                console.log('Query error: ' + err);
+                            } else {
+
+                                console.log('What ?');
+                                if (result.rows.length === 0) {
+
+                                    console.log('??????' + result.rows.length);
+
+                                    let sql = 'INSERT INTO user (fb_id, first_name, last_name, profile_pic) ' +
+                                        'VALUES ($1, $2, $3, $4)';
+                                    client.query(sql,
+                                        [
+                                            userId,
+                                            user.first_name,
+                                            user.last_name,
+                                            user.profile_pic
+                                        ]);
                                 }
-                            });
-    
-                    });
-                    pool.end();
+                                else {
+                                    console.log('?' + result.rows.length);
+                                }
+                            }
+                        });
+
+                });
+                pool.end();
 
                 sendTextMessage(userId, "Chào " + user.first_name + '! ' +
                     'Shop có thể tư vấn bạn về điều gì ? ');
