@@ -282,8 +282,8 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     let emailContent = 'Fullname: ' + user_name + ' address: ' + address +
                         '.<br> Phone number: ' + phone_number + '.<br> Bill: ' + bill + '.';
                     // sendEmail('New job application', emailContent);
-                    colors.updateUserColor(emailContent, sender);
-                    
+                    address.updateUserAddress(emailContent, sender);
+
                     console.log(emailContent);
                     
                     handleMessages(messages, sender);
