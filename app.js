@@ -217,7 +217,6 @@ function handleEcho(messageId, appId, metadata) {
 function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
     switch (action) {
         case "faq-delivery":
-
             handleMessages(messages, sender);
 
             sendTypingOn(sender);
@@ -245,6 +244,20 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 sendButtonMessage(sender, "Bạn muốn làm điều gì tiếp theo ?", buttons);
             }, 3000)
 
+            break;
+        
+        case "buy_product.buy_product-custom":
+            address.readUserAddress(function(address) {
+                let reply;
+                if (address === '') {
+                    reply = '';
+                } else {
+                    reply = `Địa chỉ giao hàng lần trước của bạn là: ${color}?`;
+                }
+                sendTextMessage(sender, reply);
+
+            }, sender
+        )
             break;
 
         case "applyed_product":
