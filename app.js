@@ -247,12 +247,12 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             break;
         
         case "buy_product.buy_product-custom":
-            address.readUserAddress(function(address) {
+            address.readUserAddress(function(addr) {
                 let reply;
-                if (address === '') {
+                if (addr === '') {
                     reply = '';
                 } else {
-                    reply = `Địa chỉ giao hàng lần trước của bạn là: ${color}?`;
+                    reply = `Địa chỉ giao hàng lần trước của bạn là: ${addr}?`;
                 }
                 sendTextMessage(sender, reply);
 
