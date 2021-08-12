@@ -250,10 +250,9 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     // dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, sender, 'NO_ADDRESS');            
                 } else {
                     reply = `Nhắn "có" nếu bạn cần giao đến địa chỉ mới, "không" nếu dùng địa chỉ cũ này: ${addr}?`;
-                    fbService.sendTextMessage(sender, reply);
                 }
 
-
+                fbService.sendTextMessage(sender, reply);
 
             }, sender
         )
