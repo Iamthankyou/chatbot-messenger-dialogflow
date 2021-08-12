@@ -250,11 +250,11 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             address.readUserAddress(function(addr) {
                 let reply;
                 if (!isDefined(addr) || addr === '' ||addr ==='null' || addr.length <2) {
-                    reply = 'Shop cần bạn cung cấp 1 số thông tin nhé';
+                    reply = '';
                 } else {
-                    reply = `Nhắn lại: "không" nếu bạn không giao đến địa chỉ cũ này: ${addr}?`;
+                    reply = `Nhắn không nếu bạn không muốn giao đến địa chỉ cũ này: ${addr}?`;
+                    sendTextMessage(sender, reply);
                 }
-                sendTextMessage(sender, reply);
 
             }, sender
         )
