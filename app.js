@@ -252,12 +252,16 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 if (!isDefined(addr) || addr === '' ||addr ==='null' || addr.length <2) {
                     reply = 'Shop cần bạn cung cấp 1 số thông tin nhé';
                 } else {
-                    reply = `Địa chỉ giao hàng lần trước của bạn là: ${addr}?`;
+                    reply = `Nhắn lại: "không" nếu bạn không giao đến địa chỉ cũ này: ${addr}?`;
                 }
                 sendTextMessage(sender, reply);
 
             }, sender
         )
+            break;
+        
+        case "buy_product.buy_product-custom.buy_product-custom-yes":
+            sendTextMessage(sender, '');
             break;
 
         case "applyed_product":
