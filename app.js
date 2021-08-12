@@ -10,7 +10,8 @@ const app = express();
 const uuid = require('uuid');
 const pg = require('pg');
 pg.defaults.ssl = true;
-const userService = require('./user');
+// const userService = require('./user');
+const userService = require('./services/user-service');
 const address = require('./address');
 
 const weatherService = require('./services/weather-service');
@@ -156,7 +157,7 @@ function setSessionAndUser(senderID) {
     }
 
     if (!usersMap.has(senderID)) {
-        userService.addUser(function(user){
+        userService.addUser(function (user) {
             usersMap.set(senderID, user);
         }, senderID);
     }
@@ -204,7 +205,34 @@ function handleQuickReply(senderID, quickReply, messageId) {
     var quickReplyPayload = quickReply.payload;
     console.log("Quick reply for message %s with payload %s", messageId, quickReplyPayload);
     //send payload to api.ai
-    dialogflowService.sendTextQueryToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, quickReplyPayload);
+    switch (quickReplyPayload) {
+        //send payload to api.ai	        
+        case 'NEWS_PER_WEEK':
+            dialogflowService.sendTextQueryToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, quickReplyPayload); userService.newsletterSettings(function (updated) {
+                if (updated) {
+                    fbService.sendTextMessage(senderID, "Đã đăng ký hàng tuần rồi nha<3 !" +
+                        "Nếu muốn, bạn có thể nhắn hủy đăng ký bất cứ lúc nào'");
+                } else {
+                    fbService.sendTextMessage(senderID, "Đăng ký không khả dụng ngay bây giờ." +
+                        "Vui lòng thử lại sau!");
+                }
+            }, 1, senderID);
+            break;
+        case 'NEWS_PER_DAY':
+            userService.newsletterSettings(function (updated) {
+                if (updated) {
+                    fbService.sendTextMessage(senderID, "Đã đăng ký hàng ngày rồi nha <3!" +
+                        "Nếu muốn, bạn có thể nhắn hủy đăng ký bất cứ lúc nào'");
+                } else {
+                    fbService.sendTextMessage(senderID, "Đăng ký không khả dụng bây giờ." +
+                        "Vui lòng thử lại sau!");
+                }
+            }, 2, senderID);
+            break;
+        default:
+            dialogflowService.sendTextQueryToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, quickReplyPayload);
+            break;
+    }
 }
 
 function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
@@ -238,11 +266,11 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             }, 3000)
 
             break;
-        
+
         case "buy_product.buy_product-custom":
-            address.readUserAddress(function(addr) {
+            address.readUserAddress(function (addr) {
                 let reply;
-                if (!fbService.isDefined(addr) || addr === '' ||addr ==='null' || addr.length <2) {
+                if (!fbService.isDefined(addr) || addr === '' || addr === 'null' || addr.length < 2) {
                     reply = 'Hệ thống báo đây là lần đầu bạn mua hàng trên shop ?';
                     // console.log('This is sender: ' + sender);
                     // setSessionAndUser(sender);
@@ -255,9 +283,9 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 fbService.sendTextMessage(sender, reply);
 
             }, sender
-        )
+            )
             break;
-        
+
         case "applyed_product":
             let filteredContexts = contexts.filter(function (el) {
                 return el.name.includes('buy-product-show') ||
@@ -296,7 +324,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     address.updateUserAddress(emailContent, sender);
 
                     console.log(emailContent);
-                    
+
                     fbService.handleMessages(messages, sender);
                 } else {
                     fbService.handleMessages(messages, sender);
@@ -306,7 +334,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
         case "get-current-weather":
             if (parameters.fields.hasOwnProperty('city-name') && fbService.isDefined(parameters.fields['city-name'].stringValue != '') && parameters.fields['city-name'].stringValue != '') {
-                weatherService(function(weatherResponse){
+                weatherService(function (weatherResponse) {
                     if (!weatherResponse) {
                         fbService.sendTextMessage(sender,
                             `Không tìm thấy thành phố ${parameters.fields['city-name'].stringValue}`);
@@ -322,11 +350,45 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             }
 
             break;
+        case 'subcribers':
+            sendFunNewsSubscribe(senderID);
+            break;
+        case "unsubscribe":
+            userService.newsletterSettings(function(updated) {
+                if (updated) {
+                    fbService.sendTextMessage(sender, "Đã hủy đăng ký theo dõi shop, xin lỗi đã làm phiền, nhưng chúng tôi luôn luôn chờ bạn trở lại!");
+                } else {
+                    fbService.sendTextMessage(sender, "Không khả dụng, xin lỗi vì sự bất tiện này." +
+                        "Vui lòng thử lại sau!");
+                }
+            }, 0, sender);
+        break;
         default:
             //unhandled action, just send back the text
             fbService.handleMessages(messages, sender);
 
     }
+}
+
+
+function sendFunNewsSubscribe(userId) {
+    let responceText = "Shop sẽ gửi tin tức về sản phẩm cho bạn thường xuyên " +
+        "Cảm ơn bạn đã đăng ký ủng hộ shop, bạn muốn nhận tin tức hằng ngày hay theo tuần?";
+
+    let replies = [
+        {
+            "content_type": "text",
+            "title": "Hàng tuần",
+            "payload": "NEWS_PER_WEEK"
+        },
+        {
+            "content_type": "text",
+            "title": "Hàng ngày",
+            "payload": "NEWS_PER_DAY"
+        }
+    ];
+
+    fbService.sendQuickReply(userId, responceText, replies);
 }
 
 function handleDialogFlowResponse(sender, response) {
@@ -404,11 +466,11 @@ function receivedPostback(event) {
             greetUserText(senderID);
             break;
         case 'BUY_PRODUCT':
-            dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, 'BUY_PRODUCT');            
+            dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, 'BUY_PRODUCT');
             break;
         case 'TRACKING_PRODUCT':
-            dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, 'TRACKING_PRODUCT');            
-            break;    
+            dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, 'TRACKING_PRODUCT');
+            break;
         default:
             //unindentified payload
             fbService.sendTextMessage(senderID, "Tôi không hiểu lời bạn nói lắm, bạn có thể nói lại được không?");
