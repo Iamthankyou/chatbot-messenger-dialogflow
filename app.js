@@ -250,7 +250,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             address.readUserAddress(function(addr) {
                 let reply;
                 if (addr === '' ||addr ==='null' || addr.length <2) {
-                    reply = '';
+                    reply = 'Shop cần bạn cung cấp 1 số thông tin nhé';
                 } else {
                     reply = `Địa chỉ giao hàng lần trước của bạn là: ${addr}?`;
                 }
