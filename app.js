@@ -249,7 +249,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
         case "buy_product.buy_product-custom":
             address.readUserAddress(function(addr) {
                 let reply;
-                if (addr === '') {
+                if (addr === '' ||addr ==='null' || addr.length <2) {
                     reply = '';
                 } else {
                     reply = `Địa chỉ giao hàng lần trước của bạn là: ${addr}?`;
