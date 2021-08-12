@@ -351,7 +351,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
             break;
         case 'subcribers':
-            sendFunNewsSubscribe(senderID);
+            sendFunNewsSubscribe(sender);
             break;
         case "unsubscribe":
             userService.newsletterSettings(function(updated) {
