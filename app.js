@@ -257,12 +257,12 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     && contexts[0].parameters.fields['phone'] != '') ? contexts[0].parameters.fields['phone'].stringValue : '';
                 let user_name = (isDefined(contexts[0].parameters.fields['name'])
                     && contexts[0].parameters.fields['name'] != '') ? contexts[0].parameters.fields['name'].stringValue : '';
-                let address = (isDefined(contexts[0].parameters.fields['address'])
+                let addr = (isDefined(contexts[0].parameters.fields['address'])
                     && contexts[0].parameters.fields['address'] != '') ? contexts[0].parameters.fields['address'].stringValue : '';
                 let bill = (isDefined(contexts[0].parameters.fields['bill'])
                     && contexts[0].parameters.fields['bill'] != '') ? contexts[0].parameters.fields['bill'].stringValue : '';
 
-                if (phone_number != '' && user_name != '' && address != '' && bill == '') {
+                if (phone_number != '' && user_name != '' && addr != '' && bill == '') {
                     let replies = [
                         {
                             "content_type": "text",
@@ -278,8 +278,8 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     sendQuickReply(sender, messages[0].text.text[0], replies);
 
 
-                } else if (phone_number != '' && user_name != '' && address != '' && bill != '') {
-                    let emailContent = 'Fullname: ' + user_name + ' address: ' + address +
+                } else if (phone_number != '' && user_name != '' && addr != '' && bill != '') {
+                    let emailContent = 'Fullname: ' + user_name + ' address: ' + addr +
                         '.<br> Phone number: ' + phone_number + '.<br> Bill: ' + bill + '.';
                     // sendEmail('New job application', emailContent);
                     address.updateUserAddress(emailContent, sender);
