@@ -244,10 +244,10 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 let reply;
                 if (!fbService.isDefined(addr) || addr === '' ||addr ==='null' || addr.length <2) {
                     reply = 'Hệ thống báo đây là lần đầu bạn mua hàng trên shop ?';
-                    console.log('This is sender: ' + sender);
-                    setSessionAndUser(sender);
+                    // console.log('This is sender: ' + sender);
+                    // setSessionAndUser(sender);
 
-                    dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, sender, 'NO_ADDRESS');            
+                    // dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, sender, 'NO_ADDRESS');            
                 } else {
                     reply = `Nhắn "có" nếu bạn cần giao đến địa chỉ mới, "không" nếu dùng địa chỉ cũ này: ${addr}?`;
                     fbService.sendTextMessage(sender, reply);
