@@ -260,10 +260,6 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
         )
             break;
         
-        case "buy_product.buy_product-custom.buy_product-custom-yes":
-            sendTextMessage(sender, '');
-            break;
-
         case "applyed_product":
             let filteredContexts = contexts.filter(function (el) {
                 return el.name.includes('buy-product-show') ||
