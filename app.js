@@ -324,104 +324,6 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
     }
 }
 
-function handleMessage(message, sender) {
-    switch (message.message) {
-        case "text": //text
-            message.text.text.forEach((text) => {
-                if (text !== '') {
-                    sendTextMessage(sender, text);
-                }
-            });
-            break;
-        case "quickReplies": //quick replies
-            let replies = [];
-            message.quickReplies.quickReplies.forEach((text) => {
-                let reply =
-                {
-                    "content_type": "text",
-                    "title": text,
-                    "payload": text
-                }
-                replies.push(reply);
-            });
-            fbService.sendQuickReply(sender, message.quickReplies.title, replies);
-            break;
-        case "image": //image
-            sendImageMessage(sender, message.image.imageUri);
-            break;
-    }
-}
-
-
-function handleCardMessages(messages, sender) {
-
-    let elements = [];
-    for (var m = 0; m < messages.length; m++) {
-        let message = messages[m];
-        let buttons = [];
-        for (var b = 0; b < message.card.buttons.length; b++) {
-            let isLink = (message.card.buttons[b].postback.substring(0, 4) === 'http');
-            let button;
-            if (isLink) {
-                button = {
-                    "type": "web_url",
-                    "title": message.card.buttons[b].text,
-                    "url": message.card.buttons[b].postback
-                }
-            } else {
-                button = {
-                    "type": "postback",
-                    "title": message.card.buttons[b].text,
-                    "payload": message.card.buttons[b].postback
-                }
-            }
-            buttons.push(button);
-        }
-
-
-        let element = {
-            "title": message.card.title,
-            "image_url": message.card.imageUri,
-            "subtitle": message.card.subtitle,
-            "buttons": buttons
-        };
-        elements.push(element);
-    }
-    sendGenericMessage(sender, elements);
-}
-
-
-function handleMessages(messages, sender) {
-    let timeoutInterval = 1100;
-    let previousType;
-    let cardTypes = [];
-    let timeout = 0;
-    for (var i = 0; i < messages.length; i++) {
-
-        if (previousType == "card" && (messages[i].message != "card" || i == messages.length - 1)) {
-            timeout = (i - 1) * timeoutInterval;
-            setTimeout(handleCardMessages.bind(null, cardTypes, sender), timeout);
-            cardTypes = [];
-            timeout = i * timeoutInterval;
-            setTimeout(handleMessage.bind(null, messages[i], sender), timeout);
-        } else if (messages[i].message == "card" && i == messages.length - 1) {
-            cardTypes.push(messages[i]);
-            timeout = (i - 1) * timeoutInterval;
-            setTimeout(handleCardMessages.bind(null, cardTypes, sender), timeout);
-            cardTypes = [];
-        } else if (messages[i].message == "card") {
-            cardTypes.push(messages[i]);
-        } else {
-
-            timeout = i * timeoutInterval;
-            setTimeout(handleMessage.bind(null, messages[i], sender), timeout);
-        }
-
-        previousType = messages[i].message;
-
-    }
-}
-
 function handleDialogFlowResponse(sender, response) {
     let responseText = response.fulfillmentMessages.fulfillmentText;
 
@@ -430,7 +332,7 @@ function handleDialogFlowResponse(sender, response) {
     let contexts = response.outputContexts;
     let parameters = response.parameters;
 
-    sendTypingOff(sender);
+    fbService.sendTypingOff(sender);
 
     if (fbService.isDefined(action)) {
         handleDialogFlowAction(sender, action, messages, contexts, parameters);
@@ -443,6 +345,8 @@ function handleDialogFlowResponse(sender, response) {
         sendTextMessage(sender, responseText);
     }
 }
+
+
 
 async function resolveAfterXSeconds(x) {
     return new Promise(resolve => {
