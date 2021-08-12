@@ -313,7 +313,8 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     }
                 }, parameters.fields['city-name'].stringValue);
             } else {
-                fbService.sendTextMessage(sender, 'Thời tiết không khả dụng');
+                fbService.handleMessages(messages, sender);
+                // fbService.sendTextMessage(sender, 'Thời tiết không khả dụng');
             }
 
             break;
