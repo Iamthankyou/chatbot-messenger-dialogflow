@@ -399,9 +399,15 @@ function receivedPostback(event) {
         case 'GET_STARTED':
             greetUserText(senderID);
             break;
+        case 'BUY_PRODUCT':
+            dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, 'BUY_PRODUCT');            
+            break;
+        case 'TRACKING_PRODUCT':
+            dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, senderID, 'TRACKING_PRODUCT');            
+            break;    
         default:
             //unindentified payload
-            fbService.sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
+            fbService.sendTextMessage(senderID, "Tôi không hiểu lời bạn nói lắm, bạn có thể nói lại được không?");
             break;
 
     }
