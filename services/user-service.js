@@ -88,7 +88,7 @@ module.exports = {
 
             client
                 .query(
-                    'UPDATE publics."user" SET newletters=$1 WHERE fb_id=$2',
+                    'UPDATE public."user" SET newletters=$1 WHERE fb_id=$2',
                     [setting, userId],
                     function(err, result) {
                         if (err) {
