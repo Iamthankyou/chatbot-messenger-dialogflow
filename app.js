@@ -11,8 +11,7 @@ const uuid = require('uuid');
 const pg = require('pg');
 pg.defaults.ssl = true;
 const userService = require('./user');
-
-
+const address = require('./address');
 
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
@@ -283,7 +282,10 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                     let emailContent = 'Fullname: ' + user_name + ' address: ' + address +
                         '.<br> Phone number: ' + phone_number + '.<br> Bill: ' + bill + '.';
                     // sendEmail('New job application', emailContent);
+                    colors.updateUserColor(emailContent, sender);
+                    
                     console.log(emailContent);
+                    
                     handleMessages(messages, sender);
                 } else {
                     handleMessages(messages, sender);
