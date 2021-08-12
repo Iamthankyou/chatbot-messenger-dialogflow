@@ -341,9 +341,9 @@ function handleDialogFlowResponse(sender, response) {
         fbService.handleMessages(messages, sender);
     } else if (responseText == '' && !fbService.isDefined(action)) {
         //dialogflow could not evaluate input.
-        sendTextMessage(sender, "I'm not sure what you want. Can you be more specific?");
+        fbService.sendTextMessage(sender, "I'm not sure what you want. Can you be more specific?");
     } else if (fbService.isDefined(responseText)) {
-        sendTextMessage(sender, responseText);
+        fbService.sendTextMessage(sender, responseText);
     }
 }
 
@@ -365,10 +365,10 @@ async function greetUserText(userId) {
         user = usersMap.get(userId);
     }
     if (user) {
-        sendTextMessage(userId, "Chào " + user.first_name + '! ' +
+        fbService.sendTextMessage(userId, "Chào " + user.first_name + '! ' +
             'Shop có thể tư vấn cho bạn điều gì nào ? ');
     } else {
-        sendTextMessage(userId, 'Chào bạn! ' +
+        fbService.sendTextMessage(userId, 'Chào bạn! ' +
             '');
     }
 }
@@ -394,14 +394,14 @@ function receivedPostback(event) {
     switch (payload) {
         case 'CHAT':
             //user wants to chat
-            sendTextMessage(senderID, "Bạn muốn shop tư vấn về điều gì?");
+            fbService.sendTextMessage(senderID, "Bạn muốn shop tư vấn về điều gì?");
             break;
         case 'GET_STARTED':
             greetUserText(senderID);
             break;
         default:
             //unindentified payload
-            sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
+            fbService.sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
             break;
 
     }

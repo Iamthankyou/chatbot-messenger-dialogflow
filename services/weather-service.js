@@ -15,7 +15,7 @@ module.exports = function(callback, geoCity){
         if(!error && response.statusCode == 200) {
             let weather = JSON.parse(body);
             if (weather.hasOwnProperty("weather")) {
-                callback(`${weather["weather"][0]["description"]} nhiệt độ là ${Number(weather["main"]["temp"]) - 273.15}`);
+                callback(`${weather["weather"][0]["description"]} nhiệt độ là ${Math.round(Number(weather["main"]["temp"])) - 273.15} oC`);
             } else {
                 callback(null);
             }
