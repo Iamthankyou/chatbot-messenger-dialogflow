@@ -372,8 +372,8 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
 
 function sendFunNewsSubscribe(userId) {
-    let responceText = "Shop sẽ gửi tin tức về sản phẩm cho bạn thường xuyên " +
-        "Cảm ơn bạn đã đăng ký ủng hộ shop, bạn muốn nhận tin tức hằng ngày hay theo tuần?";
+    let responceText = "Cảm ơn bạn đã đăng ký ủng hộ shop." +
+        "Shop sẽ gửi tin tức về sản phẩm cho bạn thường xuyên, bạn muốn nhận tin tức hằng ngày hay theo tuần?";
 
     let replies = [
         {

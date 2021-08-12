@@ -65,7 +65,7 @@ module.exports = {
             }
             client
                 .query(
-                    'SELECT fb_id, first_name, last_name FROM users WHERE newletters=$1',
+                    'SELECT fb_id, first_name, last_name FROM public."user" WHERE newletters=$1',
                     [newstype],
                     function(err, result) {
                         if (err) {
@@ -88,7 +88,7 @@ module.exports = {
 
             client
                 .query(
-                    'UPDATE users SET newletters=$1 WHERE fb_id=$2',
+                    'UPDATE publics."user" SET newletters=$1 WHERE fb_id=$2',
                     [setting, userId],
                     function(err, result) {
                         if (err) {
