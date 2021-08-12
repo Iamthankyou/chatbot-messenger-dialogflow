@@ -244,6 +244,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 let reply;
                 if (!fbService.isDefined(addr) || addr === '' ||addr ==='null' || addr.length <2) {
                     reply = 'Hệ thống báo đây là lần đầu bạn mua hàng trên shop ?';
+                    console.log('This is sender: ' + sender);
                     setSessionAndUser(sender);
 
                     dialogflowService.sendEventToDialogFlow(sessionIds, handleDialogFlowResponse, sender, 'NO_ADDRESS');            
