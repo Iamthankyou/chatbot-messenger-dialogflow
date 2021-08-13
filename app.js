@@ -10,6 +10,8 @@ const app = express();
 const uuid = require('uuid');
 const pg = require('pg');
 pg.defaults.ssl = true;
+
+const broadcast = require('./routes/broadcast');
 // const userService = require('./user');
 const userService = require('./services/user-service');
 const address = require('./address');
@@ -115,6 +117,9 @@ app.get('/auth/facebook', passport.authenticate('facebook',{scope:'public_profil
 app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect : '/broadcast/broadcast', failureRedirect: '/broadcast' }));
 
+app.set('view engine', 'ejs');
+
+
 const credentials = {
     client_email: config.GOOGLE_CLIENT_EMAIL,
     private_key: config.GOOGLE_PRIVATE_KEY,
@@ -135,6 +140,8 @@ const usersMap = new Map();
 app.get('/', function (req, res) {
     res.send('Hello world, I am a chat bot')
 })
+
+app.use('/broadcast', broadcast);
 
 // for Facebook verification
 app.get('/webhook/', function (req, res) {
