@@ -19,6 +19,10 @@ const weatherService = require('./services/weather-service');
 let dialogflowService = require('./services/dialogflow-service');
 const fbService = require('./services/fb-service');
 
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const session = require('express-session');
+
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
     throw new Error('missing FB_PAGE_TOKEN');
@@ -50,7 +54,9 @@ if (!config.WEATHER_API_KEY) { //weather api key
 if (!config.PG_CONFIG) { //pg config
     throw new Error('missing PG_CONFIG');
 }
-
+if (!config.FB_APP_ID) { //app id
+    throw new Error('missing FB_APP_ID');
+}
 
 
 app.set('port', (process.env.PORT || 5000))
@@ -71,6 +77,43 @@ app.use(bodyParser.urlencoded({
 // Process application/json
 app.use(bodyParser.json());
 
+app.use(session(
+    {
+        secret: 'keyboard cat',
+        resave: true,
+        saveUninitilized: true
+    }
+));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(profile, cb) {
+    cb(null, profile);
+});
+
+passport.deserializeUser(function(profile, cb) {
+    cb(null, profile);
+});
+
+passport.use(new FacebookStrategy({
+        clientID: config.FB_APP_ID,
+        clientSecret: config.FB_APP_SECRET,
+        callbackURL: config.SERVER_URL + "auth/facebook/callback"
+    },
+    function(accessToken, refreshToken, profile, cb) {
+        process.nextTick(function() {
+            return cb(null, profile);
+        });
+    }
+));
+
+app.get('/auth/facebook', passport.authenticate('facebook',{scope:'public_profile'}));
+
+
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { successRedirect : '/broadcast/broadcast', failureRedirect: '/broadcast' }));
 
 const credentials = {
     client_email: config.GOOGLE_CLIENT_EMAIL,
