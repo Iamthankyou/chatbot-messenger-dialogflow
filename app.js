@@ -87,6 +87,8 @@ app.use(session(
     }
 ));
 
+app.set("view engine","ejs")
+
 
 app.use(passport.initialize());
 app.use(passport.session());
