@@ -2,29 +2,46 @@
 <html>
 <head>
     <title>Cài đặt cá nhân</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-    <link rel="stylesheet" href="/webview.css" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    
+    <!-- <link rel="stylesheet" href="/webview.css" /> -->
 </head>
 <body>
 <div class="container">
-    <h3>Cài đặt nhận tin đăng ký</h3>
+    <div class="card-panel teal lighten-2">
+        <h3>Cài đặt nhận tin đăng ký</h3>
+    </div>
+
     <form action="/webviews/save" method="get">
         <input type="hidden" name="psid" id="psid">
-        <h5>Tần suất</h5>
-        <input type="radio" name="newsletter" value="1"> Theo tuần<br/>
-        <input type="radio" name="newsletter" value="2"> Theo ngày<br/>
-        <input type="radio" name="newsletter" value="0"> Không bao giờ<br/>
-
-        <h5>Chủ đề</h5>
-        <input type="checkbox" name="topics[]" value="IPhone">Đồ chơi<br/>
-        <input type="checkbox" name="topics[]" value="IPad">Dụng cụ<br/>
-
-        <h5>Gửi khuyến mại</h5>
-        <input type="radio" name="deals" value="1">Có<br/>
-        <input type="radio" name="deals" value="0">Không<br/>
-
-        <button id="submitButton" type="submit">Xác nhận</button>
+        <div class="row">
+            <div class="col s12"><h5>Tần suất</h5></div>
+            <div class="col s4"><label><input type="radio" class="newsletter" name="newsletter" id="newsletter_1" value="1" ><span>Hằng tuầ<nav></nav></span></label></div>
+            <div class="col s4"><label><input type="radio" class="newsletter" name="newsletter" id="newsletter_2" value="2"><span>Hằng ngày</span></label></div>
+            <div class="col s4"><label><input type="radio" class="newsletter" name="newsletter" id="newsletter_0" value="0"><span>Không bao giờ</span></label></div>
+        </div>
+        <div class="row">
+            <div class="col s12"><h5>Chủ đề</h5></div>
+            <div class="col s4"><label><input type="checkbox" id="topic_iPhone" class="topics" name="topics[]" value="iPhone" ><span>Đồ chơi</span></label></div>
+            <div class="col s4"><label><input type="checkbox" id="topic_iPad" class="topics" name="topics[]" value="iPad"><span>Thực phẩm</span></label></div>
+            <div class="col s4"><label><input type="checkbox" id="topic_Mac" class="topics" name="topics[]" value="Mac"><span>Giáo dục</span></label></div>
+        </div>
+        <div class="row">
+            <div class="col s12"><h5>Nhận mã khuyến mại</h5></div>
+            <div class="col s6"><label><input type="radio" class="deals"  id="deals_1" name="deals" value="1" ><span>Có</span></label></div>
+            <div class="col s6"><label><input type="radio" class="deals" id="deals_0" name="deals" value="0"><span>Không</span></label></div>
+        </div>
+        <button id="submitButton" class="btn waves-effect waves-light " type="submit" name="action">Xác nhận
+            <i class="material-icons right">send</i>
+        </button>
     </form>
 </div>
 
@@ -38,9 +55,10 @@
     }(document, 'script', 'Messenger'));
     window.extAsyncInit = function() {
         // the Messenger Exstensions JS SDK is done loading
-        document.getElementById('submitButton').addEventListener('click', function() {
+            $('#submitButton').click(function() {
             MessengerExtensions.requestCloseBrowser(function success() {
                 // webview closed
+       
             }, function error(err) {
                 // an error occured
             });
@@ -49,7 +67,18 @@
         // APP_ID
         MessengerExtensions.getContext('252327929863548',
             function success(thread_context){
-                document.getElementById('psid').value = thread_context.psid;
+                // document.getElementById('psid').value = thread_context.psid;
+                $('#psid').val(thread_context.psid);
+                $.getJSON('/webviews/settings?psid=' + thread_context.psid, function (data) {
+                    $('#newsletter_' + data.newsletter).prop('checked', true);
+                    $('#deals_' + data.deals).prop('checked', true);
+                    if (data.topics) {
+                        let topics = data.topics.split(',');
+                        topics.forEach(function (topic) {
+                            $('#topic_' + topic).prop('checked', true);
+                        })
+                    }
+                });       
             },
             function error(err){
                 // error
