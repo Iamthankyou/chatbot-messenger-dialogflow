@@ -3,8 +3,6 @@ const request = require('request');
 const crypto = require('crypto');
 const config = require('../config');
 module.exports = {
-
-
     handleMessages: function(messages, sender){
         let self = module.exports;
         let timeoutInterval = 1100;

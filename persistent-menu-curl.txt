@@ -10,6 +10,13 @@ curl -X POST -H "Content-Type: application/json" -d '{
           "url":"https://shopee.vn/shop/54387099?utm_source=an_17171860000&utm_medium=affiliates&utm_campaign=&utm_content=SellerVN-54387099"
         },
         {
+          "title":"Cài đặt cá nhân",
+          "type":"web_url",
+          "url":"https://chat-bot-khuvuontuoitho.herokuapp.com/webviews/webview",
+          "webview_height_ratio":"tall",
+          "messenger_extensions":true
+        },
+        {
           "type":"postback",
           "title":"Mua hàng",
           "payload":"BUY_PRODUCT"
@@ -27,4 +34,4 @@ curl -X POST -H "Content-Type: application/json" -d '{
       ]
     }
   ]
-}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=PRIVATE"
+}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=EAADlfaygXXwBAL6WJF23UNEvz5l4LEjZCZBUkgJMvahNvMCKR5gweYWccyQG0S60eFyrkTke1A5DJMpgBt1t8Uvpkq0N0ocY7YDeprERWHG9vUbnqTAvAdGN5bGZAbyOneQgBmPQyHDNThRJvxY06wirlCwA29PIOkMnJZAJkZCIry5fwL6klvcc43jdPrZBYDUguoHBnoGgZDZD"

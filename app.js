@@ -12,6 +12,8 @@ const pg = require('pg');
 pg.defaults.ssl = true;
 
 const broadcast = require('./routes/broadcast');
+const webviews = require('./routes/webviews');
+
 // const userService = require('./user');
 const userService = require('./services/user-service');
 const address = require('./address');
@@ -68,7 +70,7 @@ app.set('port', (process.env.PORT || 5000))
 //verify request came from facebook
 app.use(bodyParser.json({
     verify: fbService.verifyRequestSignature
-}));
+}));    
 
 //serve static files in the public directory
 app.use(express.static('public'));
@@ -146,6 +148,7 @@ app.get('/', function (req, res) {
 })
 
 app.use('/broadcast', broadcast);
+app.use('/webviews', webviews);
 
 // for Facebook verification
 app.get('/webhook/', function (req, res) {
@@ -157,6 +160,7 @@ app.get('/webhook/', function (req, res) {
         res.sendStatus(403);
     }
 })
+
 
 /*
  * All callbacks for Messenger are POST-ed. They will be sent to the same
