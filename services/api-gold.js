@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const request = require('request-promise');
 module.exports = {
 
-    getGold: function () {
+    getGold: function (callback) {
         request('https://giavangvietnam.com/gia-vang-sjc/', (error, response, html) => {
             console.log(response.statusCode);
             let i = 0;
@@ -23,13 +23,12 @@ module.exports = {
 
                         let ss = 'Giá vàng hiện tại: ' + 'mua vào: ' + s[1] + 'VNĐ bán ra: ' + s[0] + 'VNĐ chênh lệch: ' + s[2] + " VNĐ";
                         console.log(ss);
-                        return ss;
+                        callback(ss);
                     };
                 });
             }
             else {
                 console.log(error);
-                return 0;
             }
         });
     }

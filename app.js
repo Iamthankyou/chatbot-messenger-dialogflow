@@ -447,9 +447,13 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             fbService.sendPassThread(sender);
             break;
         case "tracking.gold":
-            let s = gold.getGold();
-            console.log('Get gold ' + s);
-            fbService.sendTextMessage(sender, 'gold');
+            // let s = gold.getGold();
+            // console.log('Get gold ' + s);
+            // fbService.sendTextMessage(sender, s);
+
+            gold.getGold(function (infor) {
+                fbService.sendTextMessage(sender, infor);
+            });
 
             break;
 
