@@ -22,5 +22,6 @@ module.exports = {
             sslmode: 'require',
             rejectUnauthorized: false,
         }
-    }
+    },
+    FB_PAGE_INBOX_ID: process.env.FB_PAGE_INBOX_ID
 };
