@@ -576,6 +576,20 @@ module.exports = {
         self.callSendAPI(messageData);
     },
 
+    sendTextMessageOutsideMoreHour: function(recipientId, text) {
+        let self = module.exports;
+        var messageData = {
+            recipient: {
+                id: recipientId
+            },
+            message: {
+                text: text
+            },
+            messaging_type: 'MESSAGE_TAG',
+            tag: 'CONFIRMED_EVENT_UPDATE'
+        }
+        self.callSendAPI(messageData);
+    },
 
     /*
      * Call the Send API. The message data goes in the body. If successful, we'll
