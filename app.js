@@ -186,24 +186,40 @@ app.post('/webhook/', function (req, res) {
             var pageID = pageEntry.id;
             var timeOfEvent = pageEntry.time;
 
-            // Iterate over each messaging event
-            pageEntry.messaging.forEach(function (messagingEvent) {
-                if (messagingEvent.optin) {
-                    fbService.receivedAuthentication(messagingEvent);
-                } else if (messagingEvent.message) {
-                    receivedMessage(messagingEvent);
-                } else if (messagingEvent.delivery) {
-                    fbService.receivedDeliveryConfirmation(messagingEvent);
-                } else if (messagingEvent.postback) {
-                    receivedPostback(messagingEvent);
-                } else if (messagingEvent.read) {
-                    fbService.receivedMessageRead(messagingEvent);
-                } else if (messagingEvent.account_linking) {
-                    fbService.receivedAccountLink(messagingEvent);
-                } else {
-                    console.log("Webhook received unknown messagingEvent: ", messagingEvent);
-                }
-            });
+            // Secondary Receiver is in control - listen on standby channel
+            if (pageEntry.standby) {
+                // iterate webhook events from standby channel
+                pageEntry.standby.forEach(event => {
+                    const psid = event.sender.id;
+                    const message = event.message;
+                    console.log('message from: ', psid);
+                    console.log('message to inbox: ', message);
+                });
+            }
+
+            // Bot is in control - listen for messages
+            if (pageEntry.messaging) {
+                // Iterate over each messaging event
+                pageEntry.messaging.forEach(function (messagingEvent) {
+                    if (messagingEvent.optin) {
+                        fbService.receivedAuthentication(messagingEvent);
+                    } else if (messagingEvent.message) {
+                        receivedMessage(messagingEvent);
+                    } else if (messagingEvent.delivery) {
+                        fbService.receivedDeliveryConfirmation(messagingEvent);
+                    } else if (messagingEvent.postback) {
+                        receivedPostback(messagingEvent);
+                    } else if (messagingEvent.read) {
+                        fbService.receivedMessageRead(messagingEvent);
+                    } else if (messagingEvent.account_linking) {
+                        fbService.receivedAccountLink(messagingEvent);
+                    } else if (messagingEvent.pass_thread_control) {
+                        // do something with the metadata: messagingEvent.pass_thread_control.metadata
+                    } else {
+                        console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+                    }
+                });
+            }
         });
 
         // Assume all went well.
@@ -424,6 +440,10 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 }
             }, 0, sender);
         break;
+        case "talk.human":
+            fbService.sendPassThread(sender);
+            break;
+
         default:
             //unhandled action, just send back the text
             fbService.handleMessages(messages, sender);
