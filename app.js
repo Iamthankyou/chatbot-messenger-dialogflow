@@ -448,7 +448,8 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             break;
         case "tracking.gold":
             let s = gold.getGold();
-            fbService.sendTextMessage(sender, s);
+            console.log('Get gold ' + s);
+            fbService.sendTextMessage(sender, 'gold');
 
             break;
 
