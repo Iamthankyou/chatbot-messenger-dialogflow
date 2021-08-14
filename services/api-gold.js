@@ -21,7 +21,7 @@ module.exports = {
                             }
                         );
 
-                        let ss = 'Giá vàng hiện tại: ' + 'mua vào: ' + s[1] + 'VNĐ bán ra: ' + s[0] + 'VNĐ chênh lệch: ' + s[2] + " VNĐ";
+                        let ss = 'Giá vàng hiện tại ' + 'mua vào: ' + s[1] + 'VNĐ bán ra: ' + s[0] + 'VNĐ chênh lệch: ' + s[2] + " VNĐ";
                         console.log(ss);
                         callback(ss);
                     };
