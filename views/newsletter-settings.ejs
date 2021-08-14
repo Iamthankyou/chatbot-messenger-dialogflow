@@ -70,8 +70,7 @@
                 // document.getElementById('psid').value = thread_context.psid;
                 $('#psid').val(thread_context.psid);
                 $.getJSON('/webviews/settings?psid=' + thread_context.psid, function (data) {
-                    $('#newsletter_' + data.newsletter).prop('checked', true);
-                    console.log(data.newsletter);
+                    $('#newsletter_' + data.newletters).prop('checked', true);
                     $('#deals_' + data.deals).prop('checked', true);
                     if (data.topics) {
                         let topics = data.topics.split(',');
