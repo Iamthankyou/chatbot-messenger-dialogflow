@@ -9,6 +9,9 @@ const request = require('request');
 const app = express();
 const uuid = require('uuid');
 const pg = require('pg');
+
+const gold = require('./services/api-gold');
+
 pg.defaults.ssl = true;
 
 const broadcast = require('./routes/broadcast');
@@ -442,6 +445,11 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
         break;
         case "talk.human":
             fbService.sendPassThread(sender);
+            break;
+        case "tracking.gold":
+            let s = gold.getGold();
+            fbService.sendTextMessage(sender, s);
+
             break;
 
         default:
