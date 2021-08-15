@@ -229,26 +229,27 @@ app.post('/webhook/', function (req, res) {
     }
 });
 
-// app.post('/dialogflow-fulfillment', (request, response) => {
-//     dialogflowFulfillment(request, response)
+app.post('/dialogflow-fulfillment', (request, response) => {
+    dialogflowFulfillment(request, response)
+})
+
+// app.listen(port, () => {
+//     console.log(`Listening on port ${port}`)
 // })
 
-// // app.listen(port, () => {
-// //     console.log(`Listening on port ${port}`)
-// // })
+const dialogflowFulfillment = (request, response) => {
+    const agent = new WebhookClient({request, response})
 
-// const dialogflowFulfillment = (request, response) => {
-//     const agent = new WebhookClient({request, response})
+    function sayHello(agent){
+        agent.add("Hello, this was a nice tutorial by axlewebtech")
+    }
 
-//     function sayHello(agent){
-//         agent.add("Hello, this was a nice tutorial by axlewebtech")
-//     }
+    let intentMap = new Map();
+    intentMap.set("Default Welcome Intent", sayHello)
+    console.log('Say hello');
+    agent.handleRequest(intentMap)
 
-//     let intentMap = new Map();
-//     intentMap.set("Default Welcome Intent", sayHello)
-//     agent.handleRequest(intentMap)
-
-// }
+}
 
 function setSessionAndUser(senderID) {
     if (!sessionIds.has(senderID)) {
