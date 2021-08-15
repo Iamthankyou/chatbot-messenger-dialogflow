@@ -442,7 +442,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                         "Vui lòng thử lại sau!");
                 }
             }, 0, sender);
-        break;
+            break;
         case "talk.human":
             fbService.sendPassThread(sender);
             break;
