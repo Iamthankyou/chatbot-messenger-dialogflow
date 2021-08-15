@@ -30,6 +30,29 @@ const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const session = require('express-session');
 
+const functions = require('firebase-functions');
+const {WebhookClient} = require('dialogflow-fulfillment');
+const {Card, Suggestion} = require('dialogflow-fulfillment');
+
+process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+const agent = new WebhookClient({ request, response });
+console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+
+function welcome(agent) {
+agent.add(`Welcome to my agent!`);
+}
+function fallback(agent) {
+agent.add(`I didn’t understand`);
+agent.add(`I’m sorry, can you try again?`);
+}
+let intentMap = new Map();
+intentMap.set('Default Welcome Intent', welcome);
+intentMap.set('Default Fallback Intent', fallback);
+agent.handleRequest(intentMap);
+});
+
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
     throw new Error('missing FB_PAGE_TOKEN');
@@ -178,8 +201,6 @@ app.get('/webhook/', function (req, res) {
 app.post('/webhook/', function (req, res) {
     var data = req.body;
     console.log(JSON.stringify(data));
-
-
 
     // Make sure this is a page subscription
     if (data.object == 'page') {
