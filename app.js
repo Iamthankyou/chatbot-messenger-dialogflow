@@ -246,22 +246,25 @@ app.post('/webhook/', function (req, res) {
 const {WebhookClient} = require('dialogflow-fulfillment');
 
 app.post('/dialogflow-fulfillment', (request, response) => {
-    dialogflowFulfillment(request, response)
-})
+    dialogflowFulfillment(request, response);
+    console.log('dialogflow fulfillment');
+});
 
 // app.listen(port, () => {
 //     console.log(`Listening on port ${port}`)
 // })
 
 const dialogflowFulfillment = (request, response) => {
-    const agent = new WebhookClient({request, response})
+    const agent = new WebhookClient({request, response});
+
+    console.log('Dialogflow function ');
 
     function sayHello(agent){
-        agent.add("Hello, this was a nice tutorial by axlewebtech")
+        agent.add("Hello, this was a nice tutorial by axl;ewebtech")
     }
 
     let intentMap = new Map();
-    intentMap.set("Default Welcome Intent", sayHello)
+    intentMap.set("Default Welcome Intent", sayHello);
     console.log('Say hello');
     agent.handleRequest(intentMap)
 
