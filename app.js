@@ -243,8 +243,6 @@ app.post('/webhook/', function (req, res) {
 });
 
 
-const {WebhookClient} = require('dialogflow-fulfillment');
-
 app.post('/dialogflow-fulfillment', (request, response) => {
     dialogflowService.dialogflowFulfillment(request, response);
     console.log('dialogflow fulfillment');

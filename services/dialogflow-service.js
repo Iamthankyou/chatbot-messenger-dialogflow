@@ -3,6 +3,8 @@ const config = require('../config');
 const fbService = require('./fb-service');
 // Import the JSON to gRPC struct converter
 const structjson = require('./structjson.js');
+const {WebhookClient} = require('dialogflow-fulfillment');
+
 
 const credentials = {
     client_email: config.GOOGLE_CLIENT_EMAIL,
