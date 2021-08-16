@@ -181,7 +181,7 @@ app.post('/webhook/', function (req, res) {
     var data = req.body;
     console.log(JSON.stringify(data));
 
-    const agent = new WebhookClient({request, response})
+    const agent = new WebhookClient({req, res})
 
     function sayHello(agent){
         agent.add("Hello, this was a nice tutorial by axlewebtech")
