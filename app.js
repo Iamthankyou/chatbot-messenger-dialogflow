@@ -175,7 +175,6 @@ app.get('/webhook/', function (req, res) {
  * https://developers.facebook.com/docs/messenger-platform/product-overview/setup#subscribe_app
  *
  */
-const {WebhookClient} = require('dialogflow-fulfillment');
 
 app.post('/webhook/', function (req, res) {
     var data = req.body;
@@ -242,6 +241,9 @@ app.post('/webhook/', function (req, res) {
         res.sendStatus(200);
     }
 });
+
+
+const {WebhookClient} = require('dialogflow-fulfillment');
 
 app.post('/dialogflow-fulfillment', (request, response) => {
     dialogflowFulfillment(request, response)
