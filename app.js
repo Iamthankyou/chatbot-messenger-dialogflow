@@ -181,16 +181,16 @@ app.post('/webhook/', function (req, res) {
     var data = req.body;
     console.log(JSON.stringify(data));
 
-    const agent = new WebhookClient({req, res})
+    // const agent = new WebhookClient({req, res})
 
-    function sayHello(agent){
-        agent.add("Hello, this was a nice tutorial by axlewebtech")
-    }
+    // function sayHello(agent){
+    //     agent.add("Hello, this was a nice tutorial by axlewebtech")
+    // }
 
-    let intentMap = new Map();
-    intentMap.set("Default Welcome Intent", sayHello)
-    console.log('Say hello');
-    agent.handleRequest(intentMap)
+    // let intentMap = new Map();
+    // intentMap.set("Default Welcome Intent", sayHello)
+    // console.log('Say hello');
+    // agent.handleRequest(intentMap)
 
 
     // Make sure this is a page subscription
