@@ -243,11 +243,6 @@ app.post('/webhook/', function (req, res) {
 });
 
 
-app.post('/dialogflow-fulfillment', (request, response) => {
-    dialogflowService.dialogflowFulfillment(request, response);
-    console.log('dialogflow fulfillment');
-});
-
 // app.listen(port, () => {
 //     console.log(`Listening on port ${port}`)
 // })

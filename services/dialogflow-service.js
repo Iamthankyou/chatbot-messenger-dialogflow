@@ -3,8 +3,6 @@ const config = require('../config');
 const fbService = require('./fb-service');
 // Import the JSON to gRPC struct converter
 const structjson = require('./structjson.js');
-const {WebhookClient} = require('dialogflow-fulfillment');
-
 
 const credentials = {
     client_email: config.GOOGLE_CLIENT_EMAIL,
@@ -20,24 +18,6 @@ const sessionClient = new dialogflow.SessionsClient(
 
 
 module.exports = {
-
-    dialogflowFulfillment (request, response) {
-        const agent = new WebhookClient({request, response});
-
-        console.log('Dialogflow function ');
-
-        function sayHello(agent){
-            agent.add("Hello, this was a nice tutorial by axl;ewebtech")
-        }
-
-        let intentMap = new Map();
-        intentMap.set("Default Welcome Intent", sayHello);
-        console.log('Say hello');
-        agent.handleRequest(intentMap)
-
-    },
-
-
     async sendTextQueryToDialogFlow(sessionIds, handleDialogFlowResponse, sender, text, params = {}) {
         const sessionPath = sessionClient.sessionPath(config.GOOGLE_PROJECT_ID, sessionIds.get(sender));
         fbService.sendTypingOn(sender);
