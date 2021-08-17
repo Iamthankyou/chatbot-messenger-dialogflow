@@ -245,7 +245,7 @@ app.post('/webhook/', function (req, res) {
 
 var cron = require('node-cron');
 
-cron.schedule('0 6 * * *', () => {
+cron.schedule('10 * * * * *', () => {
   console.log('Running a job');
 
   userService.readAllUsers(function(users) {
@@ -263,10 +263,6 @@ cron.schedule('0 6 * * *', () => {
   timezone: "Asia/Ho_Chi_Minh"
 });
 
-var j = schedule.scheduleJob(cronExpress, function(fireDate){
-  console.log('running job!');
-  console.log(fireDate)
-});
 
 // app.listen(port, () => {
 //     console.log(`Listening on port ${port}`)
