@@ -245,14 +245,19 @@ app.post('/webhook/', function (req, res) {
 
 var cron = require('node-cron');
 
-cron.schedule('10 * * * * *', () => {
+cron.schedule('0 6 * * *', () => {
     console.log('Running a job');
 
     userService.readAllUsers(function (users) {
-        for (let i = 0; i < users.length; i++) {
-            let sender = users[i].fb_id;
-            console.log(sender);
-        }
+
+        gold.getGold(function (infor) {
+            for (let i = 0; i < users.length; i++) {
+                let sender = users[i].fb_id;
+                console.log(sender);
+                fbService.sendTextMessageOutsideMoreHour(sender, infor);    
+            };
+        });
+        
     }, 2);
 
 }, {
