@@ -250,7 +250,7 @@ cron.schedule('10 * * * * *', () => {
 
     userService.readAllUsers(function (users) {
         for (let i = 0; i < users.length; i++) {
-            sender = users[i].fb_id;
+            let sender = users[i].fb_id;
             console.log(sender);
         }
     }, 2);
