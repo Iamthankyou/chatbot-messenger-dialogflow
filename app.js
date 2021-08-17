@@ -241,7 +241,7 @@ app.post('/webhook/', function (req, res) {
         res.sendStatus(200);
     }
 });
-s
+
 const schedule = require('node-schedule');
 
 // const rule = new schedule.RecurrenceRule();
