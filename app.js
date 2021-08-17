@@ -253,11 +253,17 @@ const schedule = require('node-schedule');
 //   console.log('Hello!');
 // });
 
-const rule = new schedule.RecurrenceRule();
-rule.minute = 1;
+// const rule = new schedule.RecurrenceRule();
+// rule.minute = 1;
 
-const job = schedule.scheduleJob(rule, function(){
-  console.log('The answer to life, the universe, and everything!');
+// const job = schedule.scheduleJob(rule, function(){
+//   console.log('The answer to life, the universe, and everything!');
+// });
+
+var cronExpress = '*/5 * * * * * *';
+var j = schedule.scheduleJob(cronExpress, function(fireDate){
+  console.log('running job!');
+  console.log(fireDate)
 });
 
 // app.listen(port, () => {
