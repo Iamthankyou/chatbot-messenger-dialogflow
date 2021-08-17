@@ -242,6 +242,17 @@ app.post('/webhook/', function (req, res) {
     }
 });
 
+const schedule = require('node-schedule');
+
+const rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = [0, new schedule.Range(0, 6)];
+rule.hour = 17;
+rule.minute = 14;
+rule.tz = 'Asia/Ho_Chi_Minh';
+const job = schedule.scheduleJob(rule, function(){
+  console.log('Hello!');
+});
+
 
 // app.listen(port, () => {
 //     console.log(`Listening on port ${port}`)

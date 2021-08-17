@@ -7,4 +7,4 @@ rule.minute = 12;
 rule.tz = 'Asia/Ho_Chi_Minh';
 const job = schedule.scheduleJob(rule, function(){
   console.log('Hello!');
-});s
+});
