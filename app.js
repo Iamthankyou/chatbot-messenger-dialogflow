@@ -76,7 +76,7 @@ app.set('port', (process.env.PORT || 5000))
 //verify request came from facebook
 app.use(bodyParser.json({
     verify: fbService.verifyRequestSignature
-}));    
+}));
 
 //serve static files in the public directory
 app.use(express.static('public'));
@@ -103,31 +103,31 @@ app.use(session(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser(function(profile, cb) {
+passport.serializeUser(function (profile, cb) {
     cb(null, profile);
 });
 
-passport.deserializeUser(function(profile, cb) {
+passport.deserializeUser(function (profile, cb) {
     cb(null, profile);
 });
 
 passport.use(new FacebookStrategy({
-        clientID: config.FB_APP_ID,
-        clientSecret: config.FB_APP_SECRET,
-        callbackURL: config.SERVER_URL + "/auth/facebook/callback"
-    },
-    function(accessToken, refreshToken, profile, cb) {
-        process.nextTick(function() {
+    clientID: config.FB_APP_ID,
+    clientSecret: config.FB_APP_SECRET,
+    callbackURL: config.SERVER_URL + "/auth/facebook/callback"
+},
+    function (accessToken, refreshToken, profile, cb) {
+        process.nextTick(function () {
             return cb(null, profile);
         });
     }
 ));
 
-app.get('/auth/facebook', passport.authenticate('facebook',{scope:'public_profile'}));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'public_profile' }));
 
 
 app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { successRedirect : '/broadcast/broadcast', failureRedirect: '/broadcast' }));
+    passport.authenticate('facebook', { successRedirect: '/broadcast/broadcast', failureRedirect: '/broadcast' }));
 
 app.set('view engine', 'ejs');
 
@@ -246,21 +246,18 @@ app.post('/webhook/', function (req, res) {
 var cron = require('node-cron');
 
 cron.schedule('10 * * * * *', () => {
-  console.log('Running a job');
+    console.log('Running a job');
 
-  userService.readAllUsers(function(users) {
-    req.session.users = users;
-    res.render('broadcast-confirm', {user: req.user, message: message, users: users, numUsers: users.length, newstype: newstype})
-  }, 2);
-
-  for (let i=0; i < users.length; i++ ) {
-    sender = users[i].fb_id;
-    console.log(sender);
-   }
+    userService.readAllUsers(function (users) {
+        for (let i = 0; i < users.length; i++) {
+            sender = users[i].fb_id;
+            console.log(sender);
+        }
+    }, 2);
 
 }, {
-  scheduled: true,
-  timezone: "Asia/Ho_Chi_Minh"
+    scheduled: true,
+    timezone: "Asia/Ho_Chi_Minh"
 });
 
 
@@ -471,7 +468,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             sendFunNewsSubscribe(sender);
             break;
         case "unsubscribe":
-            userService.newsletterSettings(function(updated) {
+            userService.newsletterSettings(function (updated) {
                 if (updated) {
                     fbService.sendTextMessage(sender, "Đã hủy đăng ký theo dõi shop, xin lỗi đã làm phiền, nhưng chúng tôi luôn luôn chờ bạn trở lại!");
                 } else {
