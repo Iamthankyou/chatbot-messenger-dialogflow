@@ -242,25 +242,27 @@ app.post('/webhook/', function (req, res) {
     }
 });
 
-const schedule = require('node-schedule');
 
-// const rule = new schedule.RecurrenceRule();
-// rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-// rule.hour = 17;
-// rule.minute = 17;
-// rule.tz = 'Asia/Ho_Chi_Minh';
-// const job = schedule.scheduleJob(rule, function(){
-//   console.log('Hello!');
-// });
+var cron = require('node-cron');
 
-// const rule = new schedule.RecurrenceRule();
-// rule.minute = 1;
+cron.schedule('0 6 * * *', () => {
+  console.log('Running a job');
 
-// const job = schedule.scheduleJob(rule, function(){
-//   console.log('The answer to life, the universe, and everything!');
-// });
+  userService.readAllUsers(function(users) {
+    req.session.users = users;
+    res.render('broadcast-confirm', {user: req.user, message: message, users: users, numUsers: users.length, newstype: newstype})
+  }, 2);
 
-var cronExpress = '*/5 * * * * * *';
+  for (let i=0; i < users.length; i++ ) {
+    sender = users[i].fb_id;
+    console.log(sender);
+   }
+
+}, {
+  scheduled: true,
+  timezone: "Asia/Ho_Chi_Minh"
+});
+
 var j = schedule.scheduleJob(cronExpress, function(fireDate){
   console.log('running job!');
   console.log(fireDate)
