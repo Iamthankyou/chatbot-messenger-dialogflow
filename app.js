@@ -245,7 +245,7 @@ app.post('/webhook/', function (req, res) {
 
 var cron = require('node-cron');
 
-cron.schedule('40 6 * * *', () => {
+cron.schedule('0 9 * * *', () => {
     console.log('Running a job');
 
     userService.readAllUsers(function (users) {
