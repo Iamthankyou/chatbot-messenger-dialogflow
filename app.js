@@ -499,6 +499,10 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
                 fbService.sendTextMessage(sender, infor);
             });
 
+            gold.getTimeUpdate(function (infor) {
+                fbService.sendTextMessage(sender, infor);
+            });
+
             break;
 
         default:

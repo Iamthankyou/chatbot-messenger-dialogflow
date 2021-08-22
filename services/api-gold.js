@@ -22,7 +22,7 @@ module.exports = {
                             }
                         );
 
-                        let ss = 'Giá vàng SJC 9999' + 'mua vào: ' + s[1] + 'VNĐ bán ra: ' + s[0] + 'VNĐ chênh lệch: ' + s[2] + " VNĐ.";
+                        let ss = 'Giá vàng SJC 9999 ' + 'mua vào: ' + s[1] + 'VNĐ bán ra: ' + s[0] + 'VNĐ chênh lệch: ' + s[2] + " VNĐ.";
                         console.log(ss);
                         callback(ss);
                     };
@@ -53,7 +53,7 @@ module.exports = {
                             }
                         );
 
-                        let ss = 'Giá vàng nhẫn 99.99' + 'mua vào: ' + s[1] + 'VNĐ bán ra: ' + s[0] + 'VNĐ chênh lệch: ' + s[2] + " VNĐ.";
+                        let ss = 'Giá vàng nhẫn 99.99 ' + 'mua vào: ' + s[1] + 'VNĐ bán ra: ' + s[0] + 'VNĐ chênh lệch: ' + s[2] + " VNĐ.";
                         console.log(ss);
                         callback(ss);
                     };
@@ -62,6 +62,26 @@ module.exports = {
             else {
                 console.log(error);
             }
+        });
+    },
+
+    getTimeUpdate: function (callback) {
+
+        request('https://giavangvietnam.com/gia-vang-sjc/', (error, response, html) => {
+            console.log(response.statusCode);
+            if (!error && response.statusCode == 200) {
+                const $ = cheerio.load(html);
+
+                $('.update-time').each((index, el) => {
+                    let s = 'Câp nhật lúc: ' + $(el).text();
+                    callback(s);
+                });
+
+            }
+            else {
+                console.log(error);
+            }
+
         });
     }
 
