@@ -490,16 +490,17 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
             // console.log('Get gold ' + s);
             // fbService.sendTextMessage(sender, s);
 
+            gold.getTimeUpdate(function (infor) {
+                fbService.sendTextMessage(sender, infor);
+            });
+
+
             gold.getGold1(function (infor) {
                 fbService.sendTextMessage(sender, infor);
             });
 
 
             gold.getGold2(function (infor) {
-                fbService.sendTextMessage(sender, infor);
-            });
-
-            gold.getTimeUpdate(function (infor) {
                 fbService.sendTextMessage(sender, infor);
             });
 
