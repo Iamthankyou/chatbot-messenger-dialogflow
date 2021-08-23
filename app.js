@@ -249,14 +249,33 @@ cron.schedule('0 9 * * *', () => {
     console.log('Running a job');
 
     userService.readAllUsers(function (users) {
-
-        gold.getGold(function (infor) {
+        
+        gold.getTimeUpdate(function (infor) {
             for (let i = 0; i < users.length; i++) {
                 let sender = users[i].fb_id;
-                console.log(sender);
                 fbService.sendTextMessageOutsideMoreHour(sender, infor);    
             };
+
         });
+
+
+        gold.getGold1(function (infor) {
+            for (let i = 0; i < users.length; i++) {
+                let sender = users[i].fb_id;
+                fbService.sendTextMessageOutsideMoreHour(sender, infor);    
+            };
+
+        });
+
+
+        gold.getGold2(function (infor) {
+            for (let i = 0; i < users.length; i++) {
+                let sender = users[i].fb_id;
+                fbService.sendTextMessageOutsideMoreHour(sender, infor);    
+            };
+
+        });
+
         
     }, 2);
 
